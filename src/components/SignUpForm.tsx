@@ -1,36 +1,80 @@
-import { FormEvent } from "react";
+import useForm from "./form/useForm";
+import { FieldError } from "./form/FieldError";
+import { isEmail } from "../utils";
 
-// import React from 'react'
+const initialData = {
+  firstName: undefined,
+  lastName: undefined,
+  state: undefined,
+  city: undefined,
+  email: undefined,
+  password: undefined,
+};
+
+const validateFn = (data: unknown) => {
+  const errors = {};
+
+  if (!isEmail(data["email"])) {
+    errors["email"] = "Must be a valid email";
+  }
+
+  Object.keys(initialData).forEach((key) => {
+    if (!data[key]) {
+      errors[key] = "Required";
+    }
+  });
+
+  return errors;
+};
+
 export const SignupForm = () => {
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const { data, errors, register, handleSubmit } = useForm({
+    initialData,
+    validateFn,
+  });
+  console.log(data);
+
+  const onSubmit = (data: unknown) => {
+    console.log("Submit data", data);
+    alert(JSON.stringify(data, null, 2));
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.form}>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate style={styles.form}>
       <h3 style={styles.title}>Sign Up</h3>
 
       <div style={styles.section}>
         <label htmlFor="firstName" style={styles.label}>
           First Name
         </label>
-        <input id="firstName" name="firstName" style={styles.input} />
-        <span style={styles.labelError}>Required</span>
+        <input
+          type="text"
+          {...register("firstName")}
+          autoFocus
+          required
+          style={styles.input}
+        />
+        <FieldError id="firstName" errors={errors} />
       </div>
 
       <div style={styles.section}>
         <label htmlFor="lastName" style={styles.label}>
           Last Name
         </label>
-        <input id="lastName" name="lastName" type="text" style={styles.input} />
-        <span style={styles.labelError}>Required</span>
+        <input
+          type="text"
+          {...register("lastName")}
+          required
+          style={styles.input}
+        />
+        <FieldError id="lastName" errors={errors} />
       </div>
 
       <div style={styles.section}>
         <label htmlFor="state" style={styles.label}>
           State
         </label>
-        <select id="state" name="state" style={styles.input}>
+        <select {...register("state")} required style={styles.input}>
           <option key="state1" value="state1">
             state1
           </option>
@@ -38,14 +82,14 @@ export const SignupForm = () => {
             state2
           </option>
         </select>
-        <span style={styles.labelError}>Required</span>
+        <FieldError id="state" errors={errors} />
       </div>
 
       <div style={styles.section}>
         <label htmlFor="city" style={styles.label}>
           City
         </label>
-        <select id="city" name="city" style={styles.input}>
+        <select {...register("city")} required style={styles.input}>
           <option key="city1" value="city1">
             city1
           </option>
@@ -53,15 +97,20 @@ export const SignupForm = () => {
             city2
           </option>
         </select>
-        <span style={styles.labelError}>Required</span>
+        <FieldError id="city" errors={errors} />
       </div>
 
       <div style={styles.section}>
         <label htmlFor="email" style={styles.label}>
           Email
         </label>
-        <input id="email" name="email" type="email" style={styles.input} />
-        <span style={styles.labelError}>Required</span>
+        <input
+          type="email"
+          {...register("email")}
+          required
+          style={styles.input}
+        />
+        <FieldError id="email" errors={errors} />
       </div>
 
       <div style={styles.section}>
@@ -69,12 +118,13 @@ export const SignupForm = () => {
           Password
         </label>
         <input
-          id="password"
-          name="password"
           type="password"
+          {...register("password")}
+          required
+          autoComplete="current-password"
           style={styles.input}
         />
-        <span style={styles.labelError}>Required</span>
+        <FieldError id="password" errors={errors} />
       </div>
 
       <div style={styles.section}>
@@ -97,7 +147,6 @@ const styles = {
   title: { margin: 5, textAlign: "center" },
   section: { display: "flex", flexDirection: "column", margin: 10 },
   label: { fontSize: 15, marginBottom: 5 },
-  labelError: { fontSize: 13, fontStyle: "italic", color: "red" },
   input: { height: 30, borderRadius: 5, marginBottom: 5 },
   submitButton: {
     width: "100%",
