@@ -2,6 +2,8 @@ import useForm from "./form/useForm";
 import { FieldError } from "./form/FieldError";
 import { isEmail } from "../utils";
 import { Dropdown } from "./Dropdown";
+import { CityDropdown } from "./CityDropdown";
+import { StateDropdown } from "./StateDropdown";
 
 const initialData = {
   firstName: undefined,
@@ -74,12 +76,13 @@ export const SignupForm = () => {
         <label htmlFor="state" style={styles.label}>
           State
         </label>
-        <Dropdown
+        {/* <Dropdown
           options={["state1", "state2"]}
           {...register("state")}
           required
           style={styles.input}
-        />
+        /> */}
+        <StateDropdown {...register("state")} required style={styles.input} />
         <FieldError id="state" errors={errors} />
       </div>
 
@@ -87,12 +90,19 @@ export const SignupForm = () => {
         <label htmlFor="city" style={styles.label}>
           City
         </label>
-        <Dropdown
+        {/* <Dropdown
           options={["city1", "city2"]}
           {...register("city")}
           required
           style={styles.input}
+        /> */}
+        <CityDropdown
+          state={data.state}
+          {...register("city")}
+          required
+          style={styles.input}
         />
+
         <FieldError id="city" errors={errors} />
       </div>
 
