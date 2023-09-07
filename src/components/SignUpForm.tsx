@@ -76,12 +76,6 @@ export const SignupForm = () => {
         <label htmlFor="state" style={styles.label}>
           State
         </label>
-        {/* <Dropdown
-          options={["state1", "state2"]}
-          {...register("state")}
-          required
-          style={styles.input}
-        /> */}
         <StateDropdown {...register("state")} required style={styles.input} />
         <FieldError id="state" errors={errors} />
       </div>
@@ -90,12 +84,6 @@ export const SignupForm = () => {
         <label htmlFor="city" style={styles.label}>
           City
         </label>
-        {/* <Dropdown
-          options={["city1", "city2"]}
-          {...register("city")}
-          required
-          style={styles.input}
-        /> */}
         <CityDropdown
           state={data.state}
           {...register("city")}
